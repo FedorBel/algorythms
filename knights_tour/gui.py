@@ -34,6 +34,11 @@ class Layout(tk.Tk):
         print(i, j)
 
 
-board = Layout()
-board.drawboard()
-board.mainloop()
+def main():
+    board = Layout()
+    board.drawboard()
+    board.mainloop()
+
+
+if __name__ == "__main__":
+    main()
