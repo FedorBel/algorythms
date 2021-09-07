@@ -28,6 +28,7 @@ class Layout(tk.Tk):
                     f"tile{col}{row}", "<Button-1>", lambda e, i=col, j=row: self.get_location(e, i, j))
 
     def get_location(self, event, i, j):
+        self.canvas.delete(self.knight_tag)
         self.canvas.create_image(
             i * 90 + 45, j * 90 + 45, image=self.knight_img, tag=self.knight_tag)
         print(i, j)
