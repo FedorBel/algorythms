@@ -13,17 +13,48 @@ class Knight:
         self.y = new_y
 
 
+def printSolution(n, board):
+    for i in range(n):
+        for j in range(n):
+            print(board[i][j], end=' ')
+        print()
+
+
+def is_within_board(x: int, y: int, board_size: int):
+    return 0 <= x < board_size and 0 <= y < board_size
+
+
+def solveKTUtil(n, board, curr_x, curr_y, move_x, move_y, pos):
+    if (pos == n ** 2):
+        return True
+
+    for i in range(len(move_x)):
+        next_x = curr_x + move_x[i]
+        next_y = curr_y + move_y[i]
+        if (is_within_board(next_x, next_y, n) and board[next_x][next_y] == -1):
+            board[next_x][next_y] = pos
+            if (solveKTUtil(n, board, next_x, next_y, move_x, move_y, pos+1)):
+                return True
+
+            # Backtracking
+            board[next_x][next_y] = -1
+    return False
+
+
 def knights_tour(N: int):
-    board = [[0 for i in range(N)] for i in range(N)]
+    board = [[-1 for i in range(N)] for i in range(N)]
     move_x = [2, 1, -1, -2, -2, -1, 1, 2]
     move_y = [1, 2, 2, 1, -1, -2, -2, -1]
-    solution = []
 
-    current_pose = [0, 0]
-    board[0][0] = 1
-    while 0 in board:
-        print("loop")
-    print("End")
+    board[0][0] = 0
+
+    # Step counter for knight's position
+    pos = 1
+    if (not solveKTUtil(N, board, 0, 0, move_x, move_y, pos)):
+        print("Solution doesn't exist")
+    else:
+        printSolution(N, board)
 
 
-# knights_tour(8)
+if __name__ == "__main__":
+    knights_tour(8)
