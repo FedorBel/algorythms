@@ -10,6 +10,8 @@ class Layout(tk.Tk):
         self.canvas = tk.Canvas(self, width=720, height=720, )
         self.canvas.grid(row=0, column=1, columnspan=8, rowspan=8)
         self.board = [[None for row in range(n)] for col in range(n)]
+        self.knight_img = tk.PhotoImage(file="./assets/chess_knight.png")
+        self.knight_tag = 'knight'
 
     def drawboard(self):
         from itertools import cycle
@@ -26,6 +28,8 @@ class Layout(tk.Tk):
                     f"tile{col}{row}", "<Button-1>", lambda e, i=col, j=row: self.get_location(e, i, j))
 
     def get_location(self, event, i, j):
+        self.canvas.create_image(
+            i * 90 + 45, j * 90 + 45, image=self.knight_img, tag=self.knight_tag)
         print(i, j)
 
 
