@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from knights_tour import Knight
+
 
 class Layout(tk.Tk):
     colours = ["#563a12", "#9f9362"]  # square colours dark then light
@@ -12,6 +14,7 @@ class Layout(tk.Tk):
         self.board = [[None for row in range(n)] for col in range(n)]
         self.knight_img = tk.PhotoImage(file="./assets/chess_knight.png")
         self.knight_tag = 'knight'
+        self.knight = Knight()
 
     def drawboard(self):
         from itertools import cycle
@@ -28,10 +31,15 @@ class Layout(tk.Tk):
                     f"tile{col}{row}", "<Button-1>", lambda e, i=col, j=row: self.get_location(e, i, j))
 
     def get_location(self, event, i, j):
+        if (self.knight.is_available_step(i, j)):
+            self.knight.move(i, j)
+            self.draw_knight(i, j)
+        print(i, j)
+
+    def draw_knight(self, x, y):
         self.canvas.delete(self.knight_tag)
         self.canvas.create_image(
-            i * 90 + 45, j * 90 + 45, image=self.knight_img, tag=self.knight_tag)
-        print(i, j)
+            x * 90 + 45, y * 90 + 45, image=self.knight_img, tag=self.knight_tag)
 
 
 def main():
