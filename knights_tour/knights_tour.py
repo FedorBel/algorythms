@@ -13,7 +13,7 @@ class Knight:
         self.y = new_y
 
 
-def printSolution(n, board):
+def printSolutionBoard(n, board):
     for i in range(n):
         for j in range(n):
             print(board[i][j], end=' ')
@@ -24,7 +24,7 @@ def is_within_board(x: int, y: int, board_size: int):
     return 0 <= x < board_size and 0 <= y < board_size
 
 
-def solveKTUtil(n, board, curr_x, curr_y, move_x, move_y, pos):
+def solveKTUtil(n, board, curr_x, curr_y, move_x, move_y, pos, solution):
     if (pos == n ** 2):
         return True
 
@@ -33,7 +33,10 @@ def solveKTUtil(n, board, curr_x, curr_y, move_x, move_y, pos):
         next_y = curr_y + move_y[i]
         if (is_within_board(next_x, next_y, n) and board[next_x][next_y] == -1):
             board[next_x][next_y] = pos
-            if (solveKTUtil(n, board, next_x, next_y, move_x, move_y, pos+1)):
+            solution[pos - 1][0] = next_x
+            solution[pos - 1][1] = next_y
+
+            if (solveKTUtil(n, board, next_x, next_y, move_x, move_y, pos+1, solution)):
                 return True
 
             # Backtracking
@@ -46,14 +49,18 @@ def knights_tour(N: int):
     move_x = [2, 1, -1, -2, -2, -1, 1, 2]
     move_y = [1, 2, 2, 1, -1, -2, -2, -1]
 
+    solution = [[0, 0] for i in range(N * N)]
+
     board[0][0] = 0
 
     # Step counter for knight's position
     pos = 1
-    if (not solveKTUtil(N, board, 0, 0, move_x, move_y, pos)):
+    if (not solveKTUtil(N, board, 0, 0, move_x, move_y, pos, solution)):
         print("Solution doesn't exist")
     else:
-        printSolution(N, board)
+        printSolutionBoard(N, board)
+        # print(solution)
+    return solution
 
 
 if __name__ == "__main__":
