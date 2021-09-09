@@ -1,4 +1,5 @@
 import tkinter as tk
+import json
 
 from knights_tour import Knight
 
@@ -12,7 +13,9 @@ class Layout(tk.Tk):
         self.canvas = tk.Canvas(self, width=720, height=720, )
         self.canvas.grid(row=0, column=1, columnspan=8, rowspan=8)
         self.board = [[None for row in range(n)] for col in range(n)]
-        self.knight_img = tk.PhotoImage(file="./assets/chess_knight.png")
+        # resized_image = Image.open("./assets/chess_knight.png").
+        self.knight_img = tk.PhotoImage(
+            file="./assets/chess_knight.png").zoom(30).subsample(20)
         self.knight_tag = 'knight'
         self.knight = Knight()
 
@@ -41,10 +44,26 @@ class Layout(tk.Tk):
         self.canvas.create_image(
             x * 90 + 45, y * 90 + 45, image=self.knight_img, tag=self.knight_tag)
 
+    def knights_tour_animate(self, solitoin, i):
+        if i == len(solitoin):
+            return
+        x, y = solitoin[i]
+        print(i)
+        # print(x, y)
+        self.draw_knight(x, y)
+        self.canvas.itemconfig(self.board[y][x], fill='red')
+        self.canvas.after(300, self.knights_tour_animate, solitoin, i+1)
+
+
+n = 8
+
 
 def main():
-    board = Layout()
+    board = Layout(8)
     board.drawboard()
+    with open('knights_tour.txt', 'r') as file:
+        solution = json.load(file)
+        board.knights_tour_animate(solution, 0)
     board.mainloop()
 
 
