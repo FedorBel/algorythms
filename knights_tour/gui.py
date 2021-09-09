@@ -1,4 +1,6 @@
 import tkinter as tk
+import ctypes
+import pathlib
 import json
 
 from knights_tour import Knight
@@ -48,8 +50,6 @@ class Layout(tk.Tk):
         if i == len(solitoin):
             return
         x, y = solitoin[i]
-        print(i)
-        # print(x, y)
         self.draw_knight(x, y)
         self.canvas.itemconfig(self.board[y][x], fill='red')
         self.canvas.after(300, self.knights_tour_animate, solitoin, i+1)
@@ -61,9 +61,12 @@ n = 8
 def main():
     board = Layout(8)
     board.drawboard()
-    with open('knights_tour.txt', 'r') as file:
-        solution = json.load(file)
-        board.knights_tour_animate(solution, 0)
+    libname = pathlib.Path().absolute() / "libknights_tour.so"
+    c_lib = ctypes.CDLL(libname)
+    if (c_lib.solveKT()):
+        with open('knights_tour_c.txt', 'r') as file:
+            solution = json.load(file)
+            board.knights_tour_animate(solution, 0)
     board.mainloop()
 
 

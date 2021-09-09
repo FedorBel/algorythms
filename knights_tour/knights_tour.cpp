@@ -6,8 +6,14 @@ using namespace std;
 
 #define N 8
 
+struct Step
+{
+    size_t x;
+    size_t y;
+};
+
 int solveKTUtil(int x, int y, int movei, int sol[N][N],
-                int xMove[], int yMove[]);
+                int xMove[], int yMove[], Step *sol_steps);
 
 /* A utility function to check if i,j are
 valid indexes for N*N chessboard */
@@ -28,6 +34,32 @@ void printSolution(int sol[N][N])
     }
 }
 
+void printSteps(Step *sol_steps)
+{
+    for (size_t i = 0; i < N * N; i++)
+    {
+        cout << sol_steps[i].x << " " << sol_steps[i].y << "\n";
+    }
+}
+
+void writeToFile(Step *sol_steps)
+{
+    ofstream file;
+    file.open("knights_tour_c.txt");
+    file << "[";
+    size_t size = N * N;
+    for (size_t i = 0; i < size; i++)
+    {
+        file << "[" << sol_steps[i].x << ", " << sol_steps[i].y << "]";
+        if (i != size - 1)
+        {
+            file << ", ";
+        }
+    }
+    file << "]";
+    file.close();
+}
+
 /* This function solves the Knight Tour problem using
 Backtracking. This function mainly uses solveKTUtil()
 to solve the problem. It returns false if no complete
@@ -40,6 +72,7 @@ extern "C"
     int solveKT()
     {
         int sol[N][N];
+        Step *sol_steps = new Step[N * N];
 
         /* Initialization of solution matrix */
         for (int x = 0; x < N; x++)
@@ -54,16 +87,24 @@ extern "C"
 
         // Since the Knight is initially at the first block
         sol[0][0] = 0;
+        sol_steps[0].x = 0;
+        sol_steps[0].y = 0;
 
         /* Start from 0,0 and explore all tours using
 	solveKTUtil() */
-        if (solveKTUtil(0, 0, 1, sol, xMove, yMove) == 0)
+        if (solveKTUtil(0, 0, 1, sol, xMove, yMove, sol_steps) == 0)
         {
             cout << "Solution does not exist";
             return 0;
         }
         else
+        {
             printSolution(sol);
+            // printSteps(sol_steps);
+            writeToFile(sol_steps);
+        }
+
+        delete sol_steps;
 
         return 1;
     }
@@ -72,7 +113,7 @@ extern "C"
 /* A recursive utility function to solve Knight Tour
 problem */
 int solveKTUtil(int x, int y, int movei, int sol[N][N],
-                int xMove[8], int yMove[8])
+                int xMove[8], int yMove[8], Step *sol_steps)
 {
     int k, next_x, next_y;
     if (movei == N * N)
@@ -87,8 +128,11 @@ int solveKTUtil(int x, int y, int movei, int sol[N][N],
         if (isSafe(next_x, next_y, sol))
         {
             sol[next_x][next_y] = movei;
+            sol_steps[movei].x = next_x;
+            sol_steps[movei].y = next_y;
+
             if (solveKTUtil(next_x, next_y, movei + 1, sol,
-                            xMove, yMove) == 1)
+                            xMove, yMove, sol_steps) == 1)
                 return 1;
             else
 
@@ -99,12 +143,12 @@ int solveKTUtil(int x, int y, int movei, int sol[N][N],
     return 0;
 }
 
-// // Driver Code
-// int main()
-// {
-//     // Function Call
-//     solveKT();
-//     return 0;
-// }
+// Driver Code
+int main()
+{
+    // Function Call
+    solveKT();
+    return 0;
+}
 
 // This code is contributed by ShubhamCoder
