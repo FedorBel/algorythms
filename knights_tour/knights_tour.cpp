@@ -1,4 +1,6 @@
 // C++ program for Knight Tour problem
+extern "C" int solveKT();
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -33,35 +35,38 @@ tour is possible, otherwise return true and prints the
 tour.
 Please note that there may be more than one solutions,
 this function prints one of the feasible solutions. */
-int solveKT()
+extern "C"
 {
-    int sol[N][N];
+    int solveKT()
+    {
+        int sol[N][N];
 
-    /* Initialization of solution matrix */
-    for (int x = 0; x < N; x++)
-        for (int y = 0; y < N; y++)
-            sol[x][y] = -1;
+        /* Initialization of solution matrix */
+        for (int x = 0; x < N; x++)
+            for (int y = 0; y < N; y++)
+                sol[x][y] = -1;
 
-    /* xMove[] and yMove[] define next move of Knight.
+        /* xMove[] and yMove[] define next move of Knight.
 	xMove[] is for next value of x coordinate
 	yMove[] is for next value of y coordinate */
-    int xMove[8] = {2, 1, -1, -2, -2, -1, 1, 2};
-    int yMove[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+        int xMove[8] = {2, 1, -1, -2, -2, -1, 1, 2};
+        int yMove[8] = {1, 2, 2, 1, -1, -2, -2, -1};
 
-    // Since the Knight is initially at the first block
-    sol[0][0] = 0;
+        // Since the Knight is initially at the first block
+        sol[0][0] = 0;
 
-    /* Start from 0,0 and explore all tours using
+        /* Start from 0,0 and explore all tours using
 	solveKTUtil() */
-    if (solveKTUtil(0, 0, 1, sol, xMove, yMove) == 0)
-    {
-        cout << "Solution does not exist";
-        return 0;
-    }
-    else
-        printSolution(sol);
+        if (solveKTUtil(0, 0, 1, sol, xMove, yMove) == 0)
+        {
+            cout << "Solution does not exist";
+            return 0;
+        }
+        else
+            printSolution(sol);
 
-    return 1;
+        return 1;
+    }
 }
 
 /* A recursive utility function to solve Knight Tour
@@ -94,12 +99,12 @@ int solveKTUtil(int x, int y, int movei, int sol[N][N],
     return 0;
 }
 
-// Driver Code
-int main()
-{
-    // Function Call
-    solveKT();
-    return 0;
-}
+// // Driver Code
+// int main()
+// {
+//     // Function Call
+//     solveKT();
+//     return 0;
+// }
 
 // This code is contributed by ShubhamCoder
