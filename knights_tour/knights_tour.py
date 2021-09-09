@@ -1,3 +1,6 @@
+import json
+
+
 class Knight:
     def __init__(self) -> None:
         self.x = 0
@@ -33,8 +36,8 @@ def solveKTUtil(n, board, curr_x, curr_y, move_x, move_y, pos, solution):
         next_y = curr_y + move_y[i]
         if (is_within_board(next_x, next_y, n) and board[next_x][next_y] == -1):
             board[next_x][next_y] = pos
-            solution[pos - 1][0] = next_x
-            solution[pos - 1][1] = next_y
+            solution[pos][0] = next_x
+            solution[pos][1] = next_y
 
             if (solveKTUtil(n, board, next_x, next_y, move_x, move_y, pos+1, solution)):
                 return True
@@ -58,10 +61,12 @@ def knights_tour(N: int):
     if (not solveKTUtil(N, board, 0, 0, move_x, move_y, pos, solution)):
         print("Solution doesn't exist")
     else:
-        printSolutionBoard(N, board)
+        # printSolutionBoard(N, board)
         # print(solution)
-    return solution
+        return solution
 
 
 if __name__ == "__main__":
-    knights_tour(8)
+    solution = knights_tour(8)
+    with open('knights_tour.txt', 'w') as file:
+        json.dump(solution, file)
