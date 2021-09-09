@@ -1,9 +1,8 @@
 import tkinter as tk
-import ctypes
-import pathlib
 import json
 
 from knights_tour import Knight
+import knights_tour_c as c_kt
 
 
 class Layout(tk.Tk):
@@ -61,9 +60,7 @@ n = 8
 def main():
     board = Layout(8)
     board.drawboard()
-    libname = pathlib.Path().absolute() / "libknights_tour.so"
-    c_lib = ctypes.CDLL(libname)
-    if (c_lib.solveKT()):
+    if (c_kt.solveKT()):
         with open('knights_tour_c.txt', 'r') as file:
             solution = json.load(file)
             board.knights_tour_animate(solution, 0)
