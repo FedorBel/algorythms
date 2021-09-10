@@ -19,6 +19,8 @@ class Layout(tk.Tk):
             file="./assets/chess_knight.png").zoom(30).subsample(20)
         self.knight_tag = 'knight'
         self.knight = Knight()
+        self.knight_init_x = 0
+        self.knight_init_y = 0
 
     def drawboard(self):
         from itertools import cycle
@@ -35,10 +37,14 @@ class Layout(tk.Tk):
                     f"tile{col}{row}", "<Button-1>", lambda e, i=col, j=row: self.get_location(e, i, j))
 
     def get_location(self, event, i, j):
-        if (self.knight.is_available_step(i, j)):
-            self.knight.move(i, j)
-            self.draw_knight(i, j)
-        print(i, j)
+        # if (self.knight.is_available_step(i, j)):
+        #     self.knight.move(i, j)
+        #     self.draw_knight(i, j)
+        if (c_kt.solveKT(i, j, self.n)):
+            with open('knights_tour_c.txt', 'r') as file:
+                solution = json.load(file)
+                self.knights_tour_animate(solution, 0)
+        # print(i, j)
 
     def draw_knight(self, x, y):
         self.canvas.delete(self.knight_tag)
@@ -58,12 +64,12 @@ n = 8
 
 
 def main():
-    board = Layout(8)
+    board = Layout(6)
     board.drawboard()
-    if (c_kt.solveKT(8)):
-        with open('knights_tour_c.txt', 'r') as file:
-            solution = json.load(file)
-            board.knights_tour_animate(solution, 0)
+    # if (c_kt.solveKT(0, 0, 8)):
+    #     with open('knights_tour_c.txt', 'r') as file:
+    #         solution = json.load(file)
+    #         board.knights_tour_animate(solution, 0)
     board.mainloop()
 
 

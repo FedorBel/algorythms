@@ -1,5 +1,5 @@
 // C++ program for Knight Tour problem
-extern "C" int solveKT(int n);
+extern "C" int solveKT(int init_x, int init_y, int n);
 
 #include <bits/stdc++.h>
 #include <vector>
@@ -67,7 +67,7 @@ Please note that there may be more than one solutions,
 this function prints one of the feasible solutions. */
 extern "C"
 {
-    int solveKT(int n)
+    int solveKT(int init_x, int init_y, int n)
     {
         if (n <= 0)
         {
@@ -94,13 +94,13 @@ extern "C"
         int yMove[8] = {1, 2, 2, 1, -1, -2, -2, -1};
 
         // Since the Knight is initially at the first block
-        sol[0][0] = 0;
-        sol_steps[0].x = 0;
-        sol_steps[0].y = 0;
+        sol[init_x][init_y] = 0;
+        sol_steps[0].x = init_x;
+        sol_steps[0].y = init_y;
 
         /* Start from 0,0 and explore all tours using
 	    solveKTUtil() */
-        if (solveKTUtil(0, 0, 1, sol, xMove, yMove, sol_steps) == 0)
+        if (solveKTUtil(init_x, init_y, 1, sol, xMove, yMove, sol_steps) == 0)
         {
             cout << "Solution does not exist";
             return 0;
@@ -153,6 +153,6 @@ int solveKTUtil(int x, int y, int movei, vector<vector<int>> &sol,
 int main()
 {
     // Function Call
-    solveKT(8);
+    solveKT(0, 1, 8);
     return 0;
 }
