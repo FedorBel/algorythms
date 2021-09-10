@@ -1,10 +1,10 @@
 // C++ program for Knight Tour problem
-extern "C" int solveKT();
+extern "C" int solveKT(int n);
 
 #include <bits/stdc++.h>
-using namespace std;
+#include <vector>
 
-#define N 8
+using namespace std;
 
 struct Step
 {
@@ -12,42 +12,40 @@ struct Step
     size_t y;
 };
 
-int solveKTUtil(int x, int y, int movei, int sol[N][N],
-                int xMove[], int yMove[], Step *sol_steps);
+int solveKTUtil(int x, int y, int movei, vector<vector<int>> &sol,
+                int xMove[], int yMove[], vector<Step> &sol_steps);
 
 /* A utility function to check if i,j are
 valid indexes for N*N chessboard */
-int isSafe(int x, int y, int sol[N][N])
+int isSafe(int x, int y, const vector<vector<int>> &sol)
 {
-    return (x >= 0 && x < N && y >= 0 && y < N && sol[x][y] == -1);
+    return (x >= 0 && x < sol.size() && y >= 0 && y < sol.size() && sol[x][y] == -1);
 }
 
-/* A utility function to print
-solution matrix sol[N][N] */
-void printSolution(int sol[N][N])
+void printSolution(const vector<vector<int>> &sol)
 {
-    for (int x = 0; x < N; x++)
+    for (int x = 0; x < sol.size(); x++)
     {
-        for (int y = 0; y < N; y++)
+        for (int y = 0; y < sol.size(); y++)
             cout << " " << setw(2) << sol[x][y] << " ";
         cout << endl;
     }
 }
 
-void printSteps(Step *sol_steps)
+void printSteps(vector<Step> sol_steps)
 {
-    for (size_t i = 0; i < N * N; i++)
+    for (size_t i = 0; i < sol_steps.size(); i++)
     {
         cout << sol_steps[i].x << " " << sol_steps[i].y << "\n";
     }
 }
 
-void writeToFile(Step *sol_steps)
+void writeToFile(const vector<Step> &sol_steps)
 {
     ofstream file;
     file.open("knights_tour_c.txt");
     file << "[";
-    size_t size = N * N;
+    size_t size = sol_steps.size();
     for (size_t i = 0; i < size; i++)
     {
         file << "[" << sol_steps[i].x << ", " << sol_steps[i].y << "]";
@@ -69,19 +67,29 @@ Please note that there may be more than one solutions,
 this function prints one of the feasible solutions. */
 extern "C"
 {
-    int solveKT()
+    int solveKT(int n)
     {
-        int sol[N][N];
-        Step *sol_steps = new Step[N * N];
+        if (n <= 0)
+        {
+            return 0;
+        }
+
+        vector<vector<int>> sol(n);
+        vector<Step> sol_steps(n * n);
 
         /* Initialization of solution matrix */
-        for (int x = 0; x < N; x++)
-            for (int y = 0; y < N; y++)
+        for (int x = 0; x < n; x++)
+        {
+            sol[x].resize(n);
+            for (int y = 0; y < n; y++)
+            {
                 sol[x][y] = -1;
+            }
+        }
 
         /* xMove[] and yMove[] define next move of Knight.
-	xMove[] is for next value of x coordinate
-	yMove[] is for next value of y coordinate */
+        xMove[] is for next value of x coordinate
+        yMove[] is for next value of y coordinate */
         int xMove[8] = {2, 1, -1, -2, -2, -1, 1, 2};
         int yMove[8] = {1, 2, 2, 1, -1, -2, -2, -1};
 
@@ -91,7 +99,7 @@ extern "C"
         sol_steps[0].y = 0;
 
         /* Start from 0,0 and explore all tours using
-	solveKTUtil() */
+	    solveKTUtil() */
         if (solveKTUtil(0, 0, 1, sol, xMove, yMove, sol_steps) == 0)
         {
             cout << "Solution does not exist";
@@ -104,19 +112,17 @@ extern "C"
             writeToFile(sol_steps);
         }
 
-        delete sol_steps;
-
         return 1;
     }
 }
 
 /* A recursive utility function to solve Knight Tour
 problem */
-int solveKTUtil(int x, int y, int movei, int sol[N][N],
-                int xMove[8], int yMove[8], Step *sol_steps)
+int solveKTUtil(int x, int y, int movei, vector<vector<int>> &sol,
+                int xMove[8], int yMove[8], vector<Step> &sol_steps)
 {
     int k, next_x, next_y;
-    if (movei == N * N)
+    if (movei == sol.size() * sol.size())
         return 1;
 
     /* Try all next moves from
@@ -147,6 +153,6 @@ int solveKTUtil(int x, int y, int movei, int sol[N][N],
 int main()
 {
     // Function Call
-    solveKT();
+    solveKT(8);
     return 0;
 }

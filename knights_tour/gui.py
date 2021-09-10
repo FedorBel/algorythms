@@ -60,7 +60,7 @@ n = 8
 def main():
     board = Layout(8)
     board.drawboard()
-    if (c_kt.solveKT()):
+    if (c_kt.solveKT(8)):
         with open('knights_tour_c.txt', 'r') as file:
             solution = json.load(file)
             board.knights_tour_animate(solution, 0)
